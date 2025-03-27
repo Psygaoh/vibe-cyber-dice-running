@@ -44,14 +44,6 @@ function GameContainer() {
   return (
     <div className="min-h-screen bg-cyber-black flex items-center justify-center">
       <div className="relative flex">
-        <div className="flex flex-col justify-between p-4">
-          <div className={`text-4xl font-extrabold ${currentTurn === 2 ? 'text-cyber-pink animate-pulse' : 'text-cyber-pink'}`}>
-            PLAYER 2
-          </div>
-          <div className={`text-4xl font-extrabold ${currentTurn === 1 ? 'text-cyber-blue animate-pulse' : 'text-cyber-blue'}`}>
-            PLAYER 1
-          </div>
-        </div>
         <div id="game-container" className="border-2 border-cyber-blue p-4 flex flex-col items-center">
           <div className="flex justify-between w-full mb-4">
             <h1 className="text-cyber-blue text-2xl">Hacker's Gambit</h1>

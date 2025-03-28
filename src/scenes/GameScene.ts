@@ -19,12 +19,27 @@ export class GameScene extends Scene {
   private enemyCore!: Phaser.GameObjects.Rectangle;
   private currentTurn: 1 | 2 = 1;
   private isGameStarted: boolean = false;
+  private sounds!: {
+    successHack: Phaser.Sound.BaseSound;
+    failedHack: Phaser.Sound.BaseSound;
+  };
 
   constructor() {
     super({ key: 'GameScene' });
   }
 
+  preload() {
+    this.load.audio('hack-success', '/sounds/hack-success.mp3');
+    this.load.audio('hack-failed', '/sounds/hack-failed.mp3');
+  }
+
   create() {
+    // Initialize sounds
+    this.sounds = {
+      successHack: this.sound.add('hack-success', { volume: 0.5 }),
+      failedHack: this.sound.add('hack-failed', { volume: 0.3 })
+    };
+
     this.initializeCellStates();
     this.createGrid();
     this.createCores();
@@ -156,6 +171,7 @@ export class GameScene extends Scene {
       this.time.delayedCall(500, () => {
         cell.setStrokeStyle(1, 0x00f6ff, 0.3);
       });
+      this.sounds.failedHack.play();
       return;
     }
 
@@ -169,6 +185,9 @@ export class GameScene extends Scene {
     // Set a lighter shade for hacked cells (compared to cores)
     cell.setFillStyle(color, 0.3);
     cell.setStrokeStyle(2, color, 0.5);
+
+    // Play success sound
+    this.sounds.successHack.play();
 
     // Add a quick "hacking" animation
     this.tweens.add({

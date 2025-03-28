@@ -33,14 +33,21 @@ function GameScreen() {
   };
 
   return (
-    <div className="flex relative">
-      <div className={`flex w-full ${!isGameStarted ? 'pointer-events-none' : ''}`}>
-        <Menu 
-          currentTurn={currentTurn} 
-          onEndTurn={handleEndTurn}
-          turnCount={turnCount}
-        />
-        <GameBoard currentTurn={currentTurn} />
+    <div className="w-full h-full">
+      <div className={`flex w-full h-full p-6 gap-6 ${!isGameStarted ? 'pointer-events-none' : ''}`}>
+        {/* Menu Panel - 1/4 width */}
+        <div className="w-1/4 min-w-[300px] bg-black/40 backdrop-blur-sm rounded-2xl border border-cyan-400/20 shadow-lg shadow-cyan-400/10 p-4">
+          <Menu 
+            currentTurn={currentTurn} 
+            onEndTurn={handleEndTurn}
+            turnCount={turnCount}
+          />
+        </div>
+
+        {/* Game Board Panel - 3/4 width */}
+        <div className="flex-1 bg-black/40 backdrop-blur-sm rounded-2xl border border-cyan-400/20 shadow-lg shadow-cyan-400/10 p-4">
+          <GameBoard currentTurn={currentTurn} />
+        </div>
       </div>
       <StartModal isOpen={!isGameStarted} onStart={handleGameStart} />
     </div>

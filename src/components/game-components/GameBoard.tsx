@@ -28,7 +28,7 @@ export function GameBoard({ currentTurn }: GameBoardProps) {
       // Get the scene and set initial turn
       const scene = gameRef.current.scene.getScene('GameScene') as GameScene;
       if (scene) {
-        scene.updateTurn(1); // Ensure P1's core is glowing from the start
+        scene.updateTurn(1, false); // Initialize with game not started
       }
     }
 
@@ -50,7 +50,7 @@ export function GameBoard({ currentTurn }: GameBoardProps) {
   }, [currentTurn, isGameStarted]);
 
   return (
-    <div id="game-container" className="flex-1 flex items-center justify-center">
+    <div id="game-container" className="w-full h-full flex items-center justify-center">
       {/* Phaser game will be mounted here */}
     </div>
   );

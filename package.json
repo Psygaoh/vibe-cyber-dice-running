@@ -11,6 +11,8 @@
     "devtools": "react-devtools"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.0",
+    "@heroicons/react": "^2.2.0",
     "@reduxjs/toolkit": "^2.6.1",
     "@tailwindcss/cli": "^4.0.17",
     "@tailwindcss/vite": "^4.0.17",

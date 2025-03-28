@@ -6,6 +6,7 @@ export class GameScene extends Scene {
   private playerCore!: Phaser.GameObjects.Rectangle;
   private enemyCore!: Phaser.GameObjects.Rectangle;
   private currentTurn: 1 | 2 = 1;
+  private isGameStarted: boolean = false;
 
   constructor() {
     super({ key: 'GameScene' });
@@ -76,12 +77,25 @@ export class GameScene extends Scene {
     // Remove this entire method as we don't want the player labels anymore
   }
 
-  updateTurn(turn: 1 | 2) {
+  updateTurn(turn: 1 | 2, isGameStarted: boolean) {
     this.currentTurn = turn;
+    this.isGameStarted = isGameStarted;
     this.updateCorePulsing();
   }
 
   private updateCorePulsing() {
+    // Stop all existing tweens
+    this.tweens.killTweensOf([this.playerCore, this.enemyCore]);
+    
+    if (!this.isGameStarted) {
+      // If game hasn't started, set both cores to normal opacity
+      this.playerCore.setFillStyle(0x00f6ff, 0.5);
+      this.enemyCore.setFillStyle(0xff00ff, 0.5);
+      this.playerCore.setAlpha(1);
+      this.enemyCore.setAlpha(1);
+      return;
+    }
+
     if (this.currentTurn === 1) {
       // Player 1's turn
       this.playerCore.setFillStyle(0x00f6ff, 0.8);
@@ -97,7 +111,6 @@ export class GameScene extends Scene {
       });
       
       // Stop enemy pulsing
-      this.tweens.killTweensOf([this.enemyCore]);
       this.enemyCore.setAlpha(1);
     } else {
       // Player 2's turn
@@ -114,7 +127,6 @@ export class GameScene extends Scene {
       });
       
       // Stop player pulsing
-      this.tweens.killTweensOf([this.playerCore]);
       this.playerCore.setAlpha(1);
     }
   }

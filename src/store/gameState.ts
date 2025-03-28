@@ -3,11 +3,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface GameState {
   currentTurn: 1 | 2;
   turnCount: number;
+  isGameStarted: boolean;
 }
 
 const initialState: GameState = {
   currentTurn: 1,
   turnCount: 1,
+  isGameStarted: false,
 };
 
 const gameStateSlice = createSlice({
@@ -21,8 +23,13 @@ const gameStateSlice = createSlice({
         state.turnCount += 1;
       }
     },
+    startGame: (state) => {
+      state.isGameStarted = true;
+      state.currentTurn = 1;
+      state.turnCount = 1;
+    },
   },
 });
 
-export const { endTurn } = gameStateSlice.actions;
+export const { endTurn, startGame } = gameStateSlice.actions;
 export default gameStateSlice.reducer; 

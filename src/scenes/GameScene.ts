@@ -7,6 +7,11 @@ interface CellState {
   isCore: boolean;
 }
 
+interface Position {
+  x: number;
+  y: number;
+}
+
 export class GameScene extends Scene {
   private grid: Phaser.GameObjects.Rectangle[][] = [];
   private cellStates: CellState[][] = [];
@@ -64,41 +69,119 @@ export class GameScene extends Scene {
         cell.setStrokeStyle(1, 0x00f6ff, 0.3);
         cell.setFillStyle(0x0a0a0a, 0.5);
         
-        // Make cell interactive
         cell.setInteractive({ useHandCursor: true });
         
-        // Hover effects
-        cell.on('pointerover', () => {
-          if (!this.cellStates[x][y].owned && this.isGameStarted) {
-            cell.setStrokeStyle(2, this.currentTurn === 1 ? 0x00f6ff : 0xff00ff, 0.8);
-            // Add glow effect using a larger stroke
-            cell.setStrokeStyle(3, this.currentTurn === 1 ? 0x00f6ff : 0xff00ff, 0.6);
-            // Add slight fill for extra effect
-            cell.setFillStyle(this.currentTurn === 1 ? 0x00f6ff : 0xff00ff, 0.1);
-          }
-        });
-
-        cell.on('pointerout', () => {
-          if (!this.cellStates[x][y].owned) {
-            cell.setStrokeStyle(1, 0x00f6ff, 0.3);
-            cell.setFillStyle(0x0a0a0a, 0.5);
-          }
-        });
-
-        cell.on('pointerdown', () => {
-          if (this.isGameStarted && !this.cellStates[x][y].owned) {
-            this.handleCellClick(x, y);
-          }
-        });
+        this.setupCellInteractions(cell, x, y);
 
         this.grid[x][y] = cell;
       }
     }
   }
 
-  private handleCellClick(x: number, y: number) {
-    console.log(`Cell clicked at ${x}, ${y}`);
-    // We'll implement the hacking logic here in the next step
+  private setupCellInteractions(cell: Phaser.GameObjects.Rectangle, x: number, y: number) {
+    cell.on('pointerover', () => {
+      if (!this.cellStates[x][y].owned && this.isGameStarted) {
+        const canHack = this.hasAdjacentOwnedCell(x, y);
+        const color = this.currentTurn === 1 ? 0x00f6ff : 0xff00ff;
+        
+        if (canHack) {
+          cell.setStrokeStyle(3, color, 0.6);
+          cell.setFillStyle(color, 0.1);
+        } else {
+          cell.setStrokeStyle(2, 0xff0000, 0.4);
+        }
+      }
+    });
+
+    cell.on('pointerout', () => {
+      if (!this.cellStates[x][y].owned) {
+        cell.setStrokeStyle(1, 0x00f6ff, 0.3);
+        cell.setFillStyle(0x0a0a0a, 0.5);
+      }
+    });
+
+    cell.on('pointerdown', () => {
+      if (this.isGameStarted && !this.cellStates[x][y].owned) {
+        this.handleCellClick(x, y);
+      }
+    });
+  }
+
+  private isValidPosition(x: number, y: number): boolean {
+    return x >= 0 && x < GRID_WIDTH && y >= 0 && y < GRID_HEIGHT;
+  }
+
+  private getAdjacentCells(x: number, y: number): Position[] {
+    const adjacentPositions = [
+      { x: x - 1, y: y },
+      { x: x + 1, y: y },
+      { x: x, y: y - 1 },
+      { x: x, y: y + 1 }
+    ];
+    
+    return adjacentPositions.filter(pos => this.isValidPosition(pos.x, pos.y));
+  }
+
+  private hasAdjacentOwnedCell(x: number, y: number): boolean {
+    const adjacentCells = this.getAdjacentCells(x, y);
+    return adjacentCells.some(pos => 
+      this.cellStates[pos.x][pos.y].owned && 
+      this.cellStates[pos.x][pos.y].owner === this.currentTurn
+    );
+  }
+
+  private handleCellClick(x: number, y: number): void {
+    if (!this.isGameStarted || this.cellStates[x][y].owned) {
+      return;
+    }
+
+    const adjacentCells = [
+      { x: x - 1, y: y },
+      { x: x + 1, y: y },
+      { x: x, y: y - 1 },
+      { x: x, y: y + 1 }
+    ].filter(pos => 
+      pos.x >= 0 && pos.x < GRID_WIDTH && 
+      pos.y >= 0 && pos.y < GRID_HEIGHT
+    );
+
+    const hasAdjacentOwned = adjacentCells.some(pos => 
+      this.cellStates[pos.x][pos.y].owned && 
+      this.cellStates[pos.x][pos.y].owner === this.currentTurn
+    );
+
+    if (!hasAdjacentOwned) {
+      const cell = this.grid[x][y];
+      cell.setStrokeStyle(2, 0xff0000, 0.8);
+      this.time.delayedCall(500, () => {
+        cell.setStrokeStyle(1, 0x00f6ff, 0.3);
+      });
+      return;
+    }
+
+    // Hack the cell
+    this.cellStates[x][y].owned = true;
+    this.cellStates[x][y].owner = this.currentTurn;
+
+    const cell = this.grid[x][y];
+    const color = this.currentTurn === 1 ? 0x00f6ff : 0xff00ff;
+    
+    // Set a lighter shade for hacked cells (compared to cores)
+    cell.setFillStyle(color, 0.3);
+    cell.setStrokeStyle(2, color, 0.5);
+
+    // Add a quick "hacking" animation
+    this.tweens.add({
+      targets: cell,
+      scaleX: 1.1,
+      scaleY: 1.1,
+      duration: 200,
+      yoyo: true,
+      ease: 'Power2',
+      onComplete: () => {
+        cell.setScale(1);
+      }
+    });
   }
 
   private createCores() {

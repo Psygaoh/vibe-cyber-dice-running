@@ -1,5 +1,5 @@
 import { Scene } from 'phaser';
-import { GRID_WIDTH, GRID_HEIGHT, CELL_SIZE, CORE_POSITIONS } from '../config/gameConfig';
+import { GRID_WIDTH, GRID_HEIGHT, BASE_CELL_SIZE, CORE_POSITIONS } from '../config/gameConfig';
 
 export class GameScene extends Scene {
   private grid: Phaser.GameObjects.Rectangle[][] = [];
@@ -22,10 +22,10 @@ export class GameScene extends Scene {
       this.grid[x] = [];
       for (let y = 0; y < GRID_HEIGHT; y++) {
         const cell = this.add.rectangle(
-          x * CELL_SIZE + CELL_SIZE / 2,
-          y * CELL_SIZE + CELL_SIZE / 2,
-          CELL_SIZE,
-          CELL_SIZE
+          x * BASE_CELL_SIZE + BASE_CELL_SIZE / 2,
+          y * BASE_CELL_SIZE + BASE_CELL_SIZE / 2,
+          BASE_CELL_SIZE,
+          BASE_CELL_SIZE
         );
         cell.setStrokeStyle(1, 0x00f6ff, 0.3);
         cell.setFillStyle(0x0a0a0a, 0.5);
@@ -37,18 +37,18 @@ export class GameScene extends Scene {
   private createCores() {
     // Player Core (P1)
     this.playerCore = this.add.rectangle(
-      CORE_POSITIONS.player.x * CELL_SIZE + CELL_SIZE / 2,
-      CORE_POSITIONS.player.y * CELL_SIZE + CELL_SIZE / 2,
-      CELL_SIZE,
-      CELL_SIZE
+      CORE_POSITIONS.player.x * BASE_CELL_SIZE + BASE_CELL_SIZE / 2,
+      CORE_POSITIONS.player.y * BASE_CELL_SIZE + BASE_CELL_SIZE / 2,
+      BASE_CELL_SIZE,
+      BASE_CELL_SIZE
     ).setFillStyle(0x00f6ff, 0.5);
 
     // Enemy Core (P2)
     this.enemyCore = this.add.rectangle(
-      CORE_POSITIONS.enemy.x * CELL_SIZE + CELL_SIZE / 2,
-      CORE_POSITIONS.enemy.y * CELL_SIZE + CELL_SIZE / 2,
-      CELL_SIZE,
-      CELL_SIZE
+      CORE_POSITIONS.enemy.x * BASE_CELL_SIZE + BASE_CELL_SIZE / 2,
+      CORE_POSITIONS.enemy.y * BASE_CELL_SIZE + BASE_CELL_SIZE / 2,
+      BASE_CELL_SIZE,
+      BASE_CELL_SIZE
     ).setFillStyle(0xff00ff, 0.5);
 
     // Add small text labels on cores
@@ -59,15 +59,15 @@ export class GameScene extends Scene {
     };
 
     this.add.text(
-      CORE_POSITIONS.player.x * CELL_SIZE + CELL_SIZE / 2,
-      CORE_POSITIONS.player.y * CELL_SIZE + CELL_SIZE / 2,
+      CORE_POSITIONS.player.x * BASE_CELL_SIZE + BASE_CELL_SIZE / 2,
+      CORE_POSITIONS.player.y * BASE_CELL_SIZE + BASE_CELL_SIZE / 2,
       'P1',
       coreTextConfig
     ).setOrigin(0.5);
 
     this.add.text(
-      CORE_POSITIONS.enemy.x * CELL_SIZE + CELL_SIZE / 2,
-      CORE_POSITIONS.enemy.y * CELL_SIZE + CELL_SIZE / 2,
+      CORE_POSITIONS.enemy.x * BASE_CELL_SIZE + BASE_CELL_SIZE / 2,
+      CORE_POSITIONS.enemy.y * BASE_CELL_SIZE + BASE_CELL_SIZE / 2,
       'P2',
       coreTextConfig
     ).setOrigin(0.5);

@@ -21,6 +21,8 @@ export function GameBoard({ currentTurn }: GameBoardProps) {
         scale: {
           ...GAME_CONFIG.scale,
           parent: 'game-container',
+          mode: Phaser.Scale.FIT,
+          autoCenter: Phaser.Scale.CENTER_BOTH,
         }
       };
       gameRef.current = new Phaser.Game(config);
@@ -50,8 +52,8 @@ export function GameBoard({ currentTurn }: GameBoardProps) {
   }, [currentTurn, isGameStarted]);
 
   return (
-    <div id="game-container" className="w-full h-full flex items-center justify-center">
-      {/* Phaser game will be mounted here */}
+    <div className="flex-1 flex items-center justify-center">
+      <div id="game-container" className="aspect-[7/11] h-full max-h-[calc(100vh-7rem)] flex items-center justify-center" />
     </div>
   );
 } 

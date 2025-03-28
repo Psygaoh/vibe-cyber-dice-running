@@ -8,7 +8,7 @@ function App() {
     <div className="h-screen w-screen overflow-hidden flex flex-col bg-black m-0 p-0">
       <Header />
       
-      <main className="flex-1 flex w-full m-3">
+      <main className="flex-1 flex w-full mx-2">
         <GameScreen />
       </main>
 

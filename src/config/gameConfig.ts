@@ -1,14 +1,14 @@
 import { Types } from 'phaser';
 
-export const GRID_WIDTH = 5;
-export const GRID_HEIGHT = 7;
-export const CELL_SIZE = 80; // pixels
-export const GAME_WIDTH = GRID_WIDTH * CELL_SIZE;
-export const GAME_HEIGHT = GRID_HEIGHT * CELL_SIZE;
+export const GRID_WIDTH = 7;   // Width is 7 cells
+export const GRID_HEIGHT = 11; // Height is 11 cells
+export const BASE_CELL_SIZE = 50; // Reduced from 80 to 50 for better scaling
+export const GAME_WIDTH = GRID_WIDTH * BASE_CELL_SIZE;
+export const GAME_HEIGHT = GRID_HEIGHT * BASE_CELL_SIZE;
 
 export const CORE_POSITIONS = {
-  player: { x: 2, y: 0 }, // (3,1) in 1-based coordinates
-  enemy: { x: 2, y: 6 }, // (3,7) in 1-based coordinates
+  player: { x: 3, y: 9 }, // Player (P1) near bottom, with one row behind
+  enemy: { x: 3, y: 1 },  // Enemy (P2) near top, with one row behind
 };
 
 export const GAME_CONFIG: Types.Core.GameConfig = {
@@ -18,6 +18,20 @@ export const GAME_CONFIG: Types.Core.GameConfig = {
   backgroundColor: '#0a0a0a',
   parent: 'game-container',
   scene: [],
+  scale: {
+    mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
+    width: GAME_WIDTH,
+    height: GAME_HEIGHT,
+    min: {
+      width: 350,
+      height: 550
+    },
+    max: {
+      width: 700,
+      height: 1100
+    }
+  },
   physics: {
     default: 'arcade',
     arcade: {

@@ -1,7 +1,8 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Phaser from 'phaser';
 import { GameScene } from '../scenes/GameScene';
 import { GAME_CONFIG } from '../config/gameConfig';
+import { Menu } from './game-components/Menu';
 
 interface GameProps {
   currentTurn: 1 | 2;
@@ -9,6 +10,7 @@ interface GameProps {
 
 export function Game({ currentTurn }: GameProps) {
   const gameRef = useRef<Phaser.Game | null>(null);
+  const [localTurn, setLocalTurn] = useState(currentTurn);
 
   useEffect(() => {
     if (!gameRef.current) {
@@ -31,19 +33,25 @@ export function Game({ currentTurn }: GameProps) {
     };
   }, []);
 
-  // Update Phaser scene when turn changes
   useEffect(() => {
     if (gameRef.current) {
       const scene = gameRef.current.scene.getScene('GameScene') as GameScene;
       if (scene) {
-        scene.updateTurn(currentTurn);
+        scene.updateTurn(localTurn);
       }
     }
-  }, [currentTurn]);
+  }, [localTurn]);
+
+  const handleEndTurn = () => {
+    setLocalTurn(current => current === 1 ? 2 : 1);
+  };
 
   return (
-    <div id="game-container" className="w-full h-full flex items-center justify-center">
-      {/* Phaser game will be mounted here */}
+    <div className="flex">
+      <Menu currentTurn={localTurn} onEndTurn={handleEndTurn} />
+      <div id="game-container" className="flex-1 flex items-center justify-center">
+        {/* Phaser game will be mounted here */}
+      </div>
     </div>
   );
 } 

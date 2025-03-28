@@ -22,6 +22,7 @@ export class GameScene extends Scene {
   private sounds!: {
     successHack: Phaser.Sound.BaseSound;
     failedHack: Phaser.Sound.BaseSound;
+    backgroundMusic: Phaser.Sound.BaseSound;
   };
 
   constructor() {
@@ -31,13 +32,18 @@ export class GameScene extends Scene {
   preload() {
     this.load.audio('hack-success', '/sounds/hack-success.mp3');
     this.load.audio('hack-failed', '/sounds/hack-failed.mp3');
+    this.load.audio('background-music', '/sounds/main_ost.mp3');
   }
 
   create() {
     // Initialize sounds
     this.sounds = {
       successHack: this.sound.add('hack-success', { volume: 0.5 }),
-      failedHack: this.sound.add('hack-failed', { volume: 0.3 })
+      failedHack: this.sound.add('hack-failed', { volume: 0.3 }),
+      backgroundMusic: this.sound.add('background-music', { 
+        volume: 0.2, 
+        loop: true 
+      })
     };
 
     this.initializeCellStates();
@@ -270,6 +276,12 @@ export class GameScene extends Scene {
   updateTurn(turn: 1 | 2, isGameStarted: boolean) {
     this.currentTurn = turn;
     this.isGameStarted = isGameStarted;
+    
+    // Start background music when game starts
+    if (isGameStarted && !this.sounds.backgroundMusic.isPlaying) {
+      this.sounds.backgroundMusic.play();
+    }
+    
     this.updateCorePulsing();
   }
 
@@ -312,6 +324,16 @@ export class GameScene extends Scene {
       
       this.playerCore.setAlpha(1);
     }
+  }
+
+  // Add methods to control sound
+  toggleBackgroundMusic(muted: boolean) {
+    this.sounds.backgroundMusic.setVolume(muted ? 0 : 0.2);
+  }
+
+  toggleSFX(muted: boolean) {
+    this.sounds.successHack.setVolume(muted ? 0 : 0.5);
+    this.sounds.failedHack.setVolume(muted ? 0 : 0.3);
   }
 
   update() {

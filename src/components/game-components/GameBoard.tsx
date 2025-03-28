@@ -1,16 +1,17 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import Phaser from 'phaser';
 import { GameScene } from '../../scenes/GameScene';
 import { GAME_CONFIG } from '../../config/gameConfig';
 import { RootState } from '../../store/store';
+import { MutableRefObject } from 'react';
 
 interface GameBoardProps {
   currentTurn: 1 | 2;
+  gameRef: MutableRefObject<Phaser.Game | null>;
 }
 
-export function GameBoard({ currentTurn }: GameBoardProps) {
-  const gameRef = useRef<Phaser.Game | null>(null);
+export function GameBoard({ currentTurn, gameRef }: GameBoardProps) {
   const isGameStarted = useSelector((state: RootState) => state.gameState.isGameStarted);
 
   useEffect(() => {

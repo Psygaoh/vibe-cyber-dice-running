@@ -1,12 +1,18 @@
 # Sound Effects
 
-This directory needs two sound effect files:
+This directory needs the following audio files:
 
-1. `hack-success.mp3`: A short (0.3-0.5s) high-pitched digital success sound
+1. `main_ost.mp3`: Background music for the game
+   - Style: Cyberpunk/synthwave
+   - Length: 2-3 minutes (will be looped)
+   - Volume: Should be moderate as it plays continuously
+   - Format: MP3, high quality (256kbps or higher)
+
+2. `hack-success.mp3`: A short (0.3-0.5s) high-pitched digital success sound
    - Recommended: A cyberpunk-style "beep" or "ping" sound
    - Volume should be moderate as it will be played frequently
 
-2. `hack-failed.mp3`: A short (0.2-0.4s) lower-pitched error sound
+3. `hack-failed.mp3`: A short (0.2-0.4s) lower-pitched error sound
    - Recommended: A cyberpunk-style "buzz" or "error" sound
    - Volume should be slightly lower than the success sound
 

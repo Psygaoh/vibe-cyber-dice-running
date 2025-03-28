@@ -7,8 +7,8 @@ export const GAME_WIDTH = GRID_WIDTH * CELL_SIZE;
 export const GAME_HEIGHT = GRID_HEIGHT * CELL_SIZE;
 
 export const CORE_POSITIONS = {
-  player: { x: 2, y: 6 }, // Player (P1) at bottom
-  enemy: { x: 2, y: 0 }, // Enemy (P2) at top
+  player: { x: 2, y: 0 }, // (3,1) in 1-based coordinates
+  enemy: { x: 2, y: 6 }, // (3,7) in 1-based coordinates
 };
 
 export const GAME_CONFIG: Types.Core.GameConfig = {

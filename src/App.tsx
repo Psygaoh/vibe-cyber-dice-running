@@ -1,7 +1,7 @@
 import './App.css'
 import { Header } from './components/Header'
 import { Footer } from './components/Footer'
-import GameScreen from './components/game-components/GameScreen'
+import GameScreen from './components/GameScreen'
 
 function App() {
   return (

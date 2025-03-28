@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Menu } from './Menu';
-import { StartModal } from './StartModal';
-import { GameBoard } from './GameBoard';
-import { endTurn, startGame } from '../../store/gameState';
-import { RootState } from '../../store/store';
+import { Menu } from './game-components/Menu';
+import { StartModal } from './game-components/StartModal';
+import { GameBoard } from './game-components/GameBoard';
+import { endTurn, startGame } from '../store/gameState';
+import { RootState } from '../store/store';
 
 function GameScreen() {
   const dispatch = useDispatch();

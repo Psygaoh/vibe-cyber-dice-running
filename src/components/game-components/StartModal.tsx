@@ -7,8 +7,8 @@ export function StartModal({ isOpen, onStart }: StartModalProps) {
   if (!isOpen) return null;
   
   return (
-    <dialog open className="absolute inset-0 bg-transparent flex items-center justify-center">
-      <div className="bg-black/90 text-cyan-400 p-8 rounded-lg border-2 border-cyan-400/30 backdrop-blur-sm">
+    <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center rounded-2xl pointer-events-auto">
+      <div className="bg-black/90 text-cyan-400 p-8 rounded-lg border-2 border-cyan-400/30">
         <div className="flex flex-col items-center gap-6">
           <h2 className="text-4xl font-bold">Welcome to Hacker's Gambit</h2>
           <p className="text-xl text-center">
@@ -23,6 +23,6 @@ export function StartModal({ isOpen, onStart }: StartModalProps) {
           </button>
         </div>
       </div>
-    </dialog>
+    </div>
   );
 } 

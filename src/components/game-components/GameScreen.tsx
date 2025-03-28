@@ -33,7 +33,7 @@ function GameScreen() {
   };
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full relative">
       <div className={`flex w-full h-full p-6 gap-6 ${!isGameStarted ? 'pointer-events-none' : ''}`}>
         {/* Menu Panel - 1/4 width */}
         <div className="w-1/4 min-w-[300px] bg-black/40 backdrop-blur-sm rounded-2xl border border-cyan-400/20 shadow-lg shadow-cyan-400/10 p-4">

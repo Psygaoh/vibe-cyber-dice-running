@@ -6,7 +6,7 @@ interface StartModalProps {
 export function StartModal({ isOpen, onStart }: StartModalProps) {
   return (
     <dialog open={isOpen} className="bg-black/90 text-cyan-400 p-8 rounded-lg border-2 border-cyan-400/30">
-      <div className="flex flex-col items-center gap-6">
+      <div className="flex flex-col items-center gap-6" id="content-screen-modal">
         <h2 className="text-4xl font-bold">Welcome to Hacker's Gambit</h2>
         <p className="text-xl text-center">
           A tactical strategy game where two players compete to control the grid.

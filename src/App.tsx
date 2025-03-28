@@ -1,80 +1,58 @@
-import { useEffect, useRef } from 'react'
-import Phaser from 'phaser'
-import { GameScene } from './scenes/GameScene'
-import { GAME_CONFIG } from './config/gameConfig'
-import { Provider } from 'react-redux'
-import { store } from './store/store'
-import { useSelector, useDispatch } from 'react-redux'
-import { RootState } from './store/store'
-import { endTurn } from './store/gameState'
+import { useState } from 'react'
+import { Header } from './components/Header'
+import { Footer } from './components/Footer'
 import './App.css'
-
-function GameContainer() {
-  const gameRef = useRef<Phaser.Game | null>(null)
-  const dispatch = useDispatch()
-  const { currentTurn, turnCount } = useSelector((state: RootState) => state.gameState)
-
-  useEffect(() => {
-    if (!gameRef.current) {
-      const config = {
-        ...GAME_CONFIG,
-        scene: [GameScene],
-      }
-      gameRef.current = new Phaser.Game(config)
-    }
-
-    return () => {
-      if (gameRef.current) {
-        gameRef.current.destroy(true)
-        gameRef.current = null
-      }
-    }
-  }, [])
-
-  const handleEndTurn = () => {
-    dispatch(endTurn())
-    // Automatically end AI turn after a short delay
-    if (currentTurn === 1) {
-      setTimeout(() => {
-        dispatch(endTurn())
-      }, 1000)
-    }
-  }
-
-  return (
-    <div className="min-h-screen bg-cyber-black flex items-center justify-center">
-      <div className="relative flex">
-        <div id="game-container" className="border-2 border-cyber-blue p-4 flex flex-col items-center">
-          <div className="flex justify-between w-full mb-4">
-            <h1 className="text-cyber-blue text-2xl">Hacker's Gambit</h1>
-            <div className="text-cyber-yellow text-xl">
-              Turn {turnCount}
-            </div>
-          </div>
-          {/* Phaser game will be mounted here */}
-        </div>
-        <div className="flex items-center ml-4">
-          <button
-            onClick={handleEndTurn}
-            disabled={currentTurn !== 1}
-            className={`px-6 py-3 rounded text-lg font-bold
-              ${currentTurn === 1 
-                ? 'bg-cyber-blue text-cyber-black hover:bg-cyber-pink transition-colors' 
-                : 'bg-gray-600 text-gray-400 cursor-not-allowed'}`}
-          >
-            End Turn
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
+import { StartModal } from './components/StartModal'
+import { Game } from './components/Game'
 
 function App() {
+  const [isGameStarted, setIsGameStarted] = useState(false)
+  const [currentTurn, setCurrentTurn] = useState<1 | 2>(1)
+
   return (
-    <Provider store={store}>
-      <GameContainer />
-    </Provider>
+    <div className="h-screen w-screen bg-red-50 text-cyan-400 flex flex-col">
+      <Header />
+      
+      <main className="flex-1 flex overflow-hidden">
+        {/* Left Column - Menu */}
+        <div className="h-full flex items-center">
+          <div className="flex flex-col items-center gap-8 p-12">
+            <div className="flex flex-col items-center gap-6">
+              <div className="flex flex-col items-center">
+                <h2 className="text-3xl font-bold mb-2">Current Turn</h2>
+                <p className={`text-2xl ${currentTurn === 1 ? 'text-cyan-400' : 'text-fuchsia-400'}`}>
+                  Player {currentTurn}
+                </p>
+              </div>
+
+              <div className="flex flex-col items-center">
+                <h2 className="text-3xl font-bold mb-2">Stats</h2>
+                <div className="flex flex-col items-center gap-2">
+                  <p className="text-xl">Moves Made: 0</p>
+                  <p className="text-xl">Time Elapsed: 0:00</p>
+                </div>
+              </div>
+
+              <button 
+                className="mt-4 px-8 py-3 bg-cyan-400/10 border-2 border-cyan-400/30 rounded-lg 
+                         text-xl text-cyan-400 hover:bg-cyan-400/20 transition-colors"
+                onClick={() => setCurrentTurn(current => current === 1 ? 2 : 1)}
+              >
+                End Turn
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Game Board */}
+        <div className="h-full flex items-center justify-center">
+          <Game currentTurn={currentTurn} />
+          <StartModal isOpen={!isGameStarted} onStart={() => setIsGameStarted(true)} />
+        </div>
+      </main>
+
+      <Footer />
+    </div>
   )
 }
 

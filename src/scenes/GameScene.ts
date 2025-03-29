@@ -24,6 +24,7 @@ export class GameScene extends Scene {
     failedHack: Phaser.Sound.BaseSound;
     backgroundMusic: Phaser.Sound.BaseSound;
   };
+  private isSFXMuted: boolean = false;
 
   constructor() {
     super({ key: 'GameScene' });
@@ -156,20 +157,7 @@ export class GameScene extends Scene {
       return;
     }
 
-    const adjacentCells = [
-      { x: x - 1, y: y },
-      { x: x + 1, y: y },
-      { x: x, y: y - 1 },
-      { x: x, y: y + 1 }
-    ].filter(pos => 
-      pos.x >= 0 && pos.x < GRID_WIDTH && 
-      pos.y >= 0 && pos.y < GRID_HEIGHT
-    );
-
-    const hasAdjacentOwned = adjacentCells.some(pos => 
-      this.cellStates[pos.x][pos.y].owned && 
-      this.cellStates[pos.x][pos.y].owner === this.currentTurn
-    );
+    const hasAdjacentOwned = this.hasAdjacentOwnedCell(x, y);
 
     if (!hasAdjacentOwned) {
       const cell = this.grid[x][y];
@@ -177,7 +165,9 @@ export class GameScene extends Scene {
       this.time.delayedCall(500, () => {
         cell.setStrokeStyle(1, 0x00f6ff, 0.3);
       });
-      this.sounds.failedHack.play();
+      if (!this.isSFXMuted) {
+        this.sounds.failedHack.play();
+      }
       return;
     }
 
@@ -188,14 +178,13 @@ export class GameScene extends Scene {
     const cell = this.grid[x][y];
     const color = this.currentTurn === 1 ? 0x00f6ff : 0xff00ff;
     
-    // Set a lighter shade for hacked cells (compared to cores)
     cell.setFillStyle(color, 0.3);
     cell.setStrokeStyle(2, color, 0.5);
 
-    // Play success sound
-    this.sounds.successHack.play();
+    if (!this.isSFXMuted) {
+      this.sounds.successHack.play();
+    }
 
-    // Add a quick "hacking" animation
     this.tweens.add({
       targets: cell,
       scaleX: 1.1,
@@ -328,12 +317,15 @@ export class GameScene extends Scene {
 
   // Add methods to control sound
   toggleBackgroundMusic(muted: boolean) {
-    this.sounds.backgroundMusic.setVolume(muted ? 0 : 0.2);
+    if (muted) {
+      this.sounds.backgroundMusic.pause();
+    } else if (this.isGameStarted) {
+      this.sounds.backgroundMusic.resume();
+    }
   }
 
   toggleSFX(muted: boolean) {
-    this.sounds.successHack.setVolume(muted ? 0 : 0.5);
-    this.sounds.failedHack.setVolume(muted ? 0 : 0.3);
+    this.isSFXMuted = muted;
   }
 
   update() {

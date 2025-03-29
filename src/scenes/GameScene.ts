@@ -31,9 +31,9 @@ export class GameScene extends Scene {
   }
 
   preload() {
-    this.load.audio('hack-success', '/sounds/hack-success.mp3');
-    this.load.audio('hack-failed', '/sounds/hack-failed.mp3');
-    this.load.audio('background-music', '/sounds/main_ost.mp3');
+    this.load.audio('hack-success', './sounds/hack-success.mp3');
+    this.load.audio('hack-failed', './sounds/hack-failed.mp3');
+    this.load.audio('background-music', './sounds/main_ost.mp3');
   }
 
   create() {
